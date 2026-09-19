@@ -68,5 +68,58 @@ void reflect(int height, int width, RGBTRIPLE image[height][width]) {
 }
 
 void blur(int height, int width, RGBTRIPLE image[height][width]) {
-    
+
+    float somaR = 0;
+    float somaG = 0;
+    float somaB = 0;
+    int quantidade = 0;
+    float novo_R = 0;
+    float novo_G = 0;
+    float novo_B = 0;
+
+    RGBTRIPLE image_copy[height][width];
+    for(int i = 0; i < height; i++) {
+        for(int j = 0; j < width; j++) {
+            image_copy[i][j] = image[i][j];
+        }
+    }
+
+    for(int i = 0; i < height; i++) {
+        for(int j = 0; j < width; j++) {
+
+            for(int k = i - 1; k <= i+1; k++) {
+
+                if (k<0 || k>(height-1)) {
+                    continue;
+                }
+                for(int l = j - 1; l <= j+1; l++) {
+
+                    if (l<0 || l>(width-1)) {
+                    continue;
+                    }
+
+                    somaR += image_copy[k][l].rgbtRed;
+                    somaG += image_copy[k][l].rgbtGreen;
+                    somaB += image_copy[k][l].rgbtBlue;
+                    quantidade++;
+
+                }
+
+            }
+
+            novo_R = round(somaR / quantidade);
+            novo_G = round(somaG / quantidade);
+            novo_B = round(somaB / quantidade);
+
+            image[i][j].rgbtRed = novo_R;
+            image[i][j].rgbtGreen = novo_G;
+            image[i][j].rgbtBlue = novo_B;
+
+            somaR  = 0;
+            somaG = 0;
+            somaB = 0;
+            quantidade = 0;
+        }
+    }
+
 }
